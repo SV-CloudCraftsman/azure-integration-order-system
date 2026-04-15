@@ -22,14 +22,12 @@ jobs:
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
-      - name: Clean previous builds
-        run: dotnet clean
-
+      # 🔥 KEY FIX: Use .csproj directly (not .sln)
       - name: Restore Dependencies
-        run: dotnet restore
+        run: dotnet restore OrderProcessor.Function.csproj
 
-      - name: Build and Publish
-        run: dotnet publish --configuration Release --output ./output
+      - name: Publish Project
+        run: dotnet publish OrderProcessor.Function.csproj --configuration Release --output ./output
 
       - name: Deploy to Azure Functions
         uses: Azure/functions-action@v1
