@@ -7,7 +7,6 @@ on:
   workflow_dispatch:
 
 env:
-  AZURE_FUNCTIONAPP_PACKAGE_PATH: '.'
   DOTNET_VERSION: '8.0.x'
 
 jobs:
@@ -15,25 +14,23 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      # Checkout repository
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      # Setup .NET SDK
       - name: Setup .NET SDK
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
-      # Restore dependencies
+      - name: Clean previous builds
+        run: dotnet clean
+
       - name: Restore Dependencies
         run: dotnet restore
 
-      # Build and publish project
       - name: Build and Publish
         run: dotnet publish --configuration Release --output ./output
 
-      # Deploy to Azure Function App
       - name: Deploy to Azure Functions
         uses: Azure/functions-action@v1
         with:
